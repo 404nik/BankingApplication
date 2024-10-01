@@ -1,0 +1,29 @@
+src/
+├── main/
+│   ├── java/
+│   │   └── com/
+│   │       └── bank/
+│   │           ├── controller/         # Controllers (HomeController, AccountController, etc.)
+│   │           ├── model/              # Models (Customer, Account, Transaction, etc.)
+│   │           ├── repository/         # Repository interfaces (CustomerRepository, etc.)
+│   │           ├── service/            # Services (CustomerService, AccountService, etc.)
+│   │           ├── config/             # Spring configuration classes
+│   │           ├── util/               # Utility classes
+│   ├── resources/
+│   │   ├── static/                     # Static resources (JS, CSS, images)
+│   │   ├── templates/                  # JSP/Thymeleaf templates for the UI
+│   │   ├── application.properties      # Application properties (database connection, security, etc.)
+│   │   ├── messages.properties         # Localization and messages
+│   │   ├── jasperreports/              # JasperReports templates (.jrxml files)
+│   ├── webapp/                         # Web application files
+│   │   └── WEB-INF/
+│   │       └── views/                  # JSP files for UI
+│   │       └── web.xml                 # Web deployment descriptor
+│   ├── test/                           # Unit and integration tests
+│       └── com/
+│           └── bank/
+│               ├── controller/         # Test cases for controllers
+│               ├── service/            # Test cases for services
+
+
+2 PARTS - MVC AND API ( BOTH DIFFERENET PORECT ) 
