@@ -54,8 +54,6 @@ The application is delivered as an installation package that automates the deplo
 ## Directory Structure
 
 ```
-
-```
 BankingAppilcation
 ├─ .metadata
 │  ├─ .lock
