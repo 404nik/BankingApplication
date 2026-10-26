@@ -1,6 +1,7 @@
 package com.mindgate.main.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class Customer {
     private String customerPassword;
     private String customerAccountStatus;
 	private int customerLoginCount;
+	private LocalDateTime customerLoginLockedUntil;
     
     public Customer() {
     }
@@ -108,6 +110,12 @@ public class Customer {
 	public void setCustomerLoginCount(int customerLoginCount) {
 		this.customerLoginCount = customerLoginCount;
 	}
+	public LocalDateTime getCustomerLoginLockedUntil() {
+		return customerLoginLockedUntil;
+	}
+	public void setCustomerLoginLockedUntil(LocalDateTime customerLoginLockedUntil) {
+		this.customerLoginLockedUntil = customerLoginLockedUntil;
+	}
 
     
     @Override
@@ -125,6 +133,7 @@ public class Customer {
             ", customerPassword='" + getCustomerPassword() + "'" +
             ", customerAccountStatus='" + getCustomerAccountStatus() + "'" +
 			", customerLoginCount='" + getCustomerLoginCount() + "'" +
+			", customerLoginLockedUntil='" + getCustomerLoginLockedUntil() + "'" +
 			"}";
 
     }

@@ -2,6 +2,7 @@ package com.mindgate.main.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -24,6 +25,10 @@ public class LoginCustomerRowMapper implements RowMapper<Customer> {
         customerLogin.setCustomerPassword(rs.getString("customer_password"));
         customerLogin.setCustomerAccountStatus(rs.getString("customer_account_status"));
         customerLogin.setCustomerLoginCount(rs.getInt("customer_login_count"));
+        Timestamp lockedUntil = rs.getTimestamp("customer_login_locked_until");
+        if (lockedUntil != null) {
+            customerLogin.setCustomerLoginLockedUntil(lockedUntil.toLocalDateTime());
+        }
         return customerLogin;
     }
 	

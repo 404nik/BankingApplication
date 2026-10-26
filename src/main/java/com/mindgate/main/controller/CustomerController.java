@@ -24,6 +24,7 @@ import com.mindgate.main.domain.Account;
 import com.mindgate.main.domain.Cheque;
 import com.mindgate.main.domain.Current;
 import com.mindgate.main.domain.Customer;
+import com.mindgate.main.domain.CustomerLoginResult;
 import com.mindgate.main.domain.DTO;
 import com.mindgate.main.domain.File;
 import com.mindgate.main.domain.FixedDeposit;
@@ -90,59 +91,55 @@ public class CustomerController extends HttpServlet {
 			return "/";
 		}
 		else{
-			Customer customer1 = customerService.loginCustomer(customer);
-			//		System.out.println(customer1.getCustomerAccountStatus() + "Account status is here");
+			CustomerLoginResult loginResult = customerService.loginCustomer(customer);
 
-					if (customer1 == null) {
-						return "CustomerErrorLogin";
-					}
-					else
-					if ( customer1 != null) {
-						if (customer1.getCustomerAccountStatus().equals("ACTIVE") && customer.getCustomerPassword().equals(customer1.getCustomerPassword())) {
-							File file = fileService.getFileById(customer1.getFileId());
-							String photoBase64 = Base64.getEncoder().encodeToString(file.getCustomerPhoto());
-							// model.addAttribute("customername", customer1.getCustomerFirstName());
-							model.addAttribute("customerlname", customer1.getCustomerLastName());
-							HttpSession session = request.getSession();
-							List<Map<String, String>> transactionList = new ArrayList<>();
-							List<Account> accountList ;
-							System.out.println("Customer ID: " + customer1);
-							accountList = accountService.getAllAccounts(customer1);
-							System.out.println(accountList);
-							for (int i = 1; i <= 20; i++) {
-								Map<String, String> transaction = new HashMap<>();
-								transaction.put("id", "TID" + i);
-								transaction.put("date", "2024-09-0" + (i % 10 + 1));
-								transaction.put("type", "Deposit");
-								transaction.put("amount", "$" + (i * 10));
-								transaction.put("balance", "$" + (100 + (i * 10)));
-								transaction.put("status", "Completed");
-								transactionList.add(transaction);
-							}
-							request.setAttribute("transactionList", transactionList);
-           					session.setAttribute("firstname", customer1.getCustomerFirstName());
-							session.setAttribute("lastname", customer1.getCustomerLastName());
-							session.setAttribute("customerid", customer1.getCustomerId());
-							session.setAttribute("customeremail", customer1.getCustomerEmail());
-							session.setAttribute("customermobile", customer1.getCustomerMobile());
-							session.setAttribute("customeraddress", customer1.getCustomerAddress());
-							session.setAttribute("customerdob", customer1.getCustomerDob());
-							session.setAttribute("customeraccountcreationdate", customer1.getCustomerAccountCreationDate());
-							session.setAttribute("customerphoto", photoBase64);	
-							session.setAttribute("accountlist", accountList);
-							session.setAttribute("currentcustomer", customer1);
-							
-
-							return "customerhomepage";
-						} else if (customer1.getCustomerAccountStatus().equals("UNAPPROVED")) {
-							return "customernotapproved";
-						}
-						else if (customer1.getCustomerAccountStatus().equals("BLOCKED")) {
-							return "blocked";
-						}
-					}
+			switch (loginResult.getStatus()) {
+			case SUCCESS:
+				Customer customer1 = loginResult.getCustomer();
+				File file = fileService.getFileById(customer1.getFileId());
+				String photoBase64 = Base64.getEncoder().encodeToString(file.getCustomerPhoto());
+				model.addAttribute("customerlname", customer1.getCustomerLastName());
+				HttpSession session = request.getSession();
+				List<Map<String, String>> transactionList = new ArrayList<>();
+				List<Account> accountList ;
+				System.out.println("Customer ID: " + customer1);
+				accountList = accountService.getAllAccounts(customer1);
+				System.out.println(accountList);
+				for (int i = 1; i <= 20; i++) {
+					Map<String, String> transaction = new HashMap<>();
+					transaction.put("id", "TID" + i);
+					transaction.put("date", "2024-09-0" + (i % 10 + 1));
+					transaction.put("type", "Deposit");
+					transaction.put("amount", "$" + (i * 10));
+					transaction.put("balance", "$" + (100 + (i * 10)));
+					transaction.put("status", "Completed");
+					transactionList.add(transaction);
+				}
+				request.setAttribute("transactionList", transactionList);
+				session.setAttribute("firstname", customer1.getCustomerFirstName());
+				session.setAttribute("lastname", customer1.getCustomerLastName());
+				session.setAttribute("customerid", customer1.getCustomerId());
+				session.setAttribute("customeremail", customer1.getCustomerEmail());
+				session.setAttribute("customermobile", customer1.getCustomerMobile());
+				session.setAttribute("customeraddress", customer1.getCustomerAddress());
+				session.setAttribute("customerdob", customer1.getCustomerDob());
+				session.setAttribute("customeraccountcreationdate", customer1.getCustomerAccountCreationDate());
+				session.setAttribute("customerphoto", photoBase64);
+				session.setAttribute("accountlist", accountList);
+				session.setAttribute("currentcustomer", customer1);
+				return "customerhomepage";
+			case ACCOUNT_UNAPPROVED:
+				return "customernotapproved";
+			case TEMPORARILY_LOCKED:
+			case ACCOUNT_BLOCKED:
+			case ACCOUNT_UNAVAILABLE:
+				return "blocked";
+			case UNKNOWN_CUSTOMER:
+			case INVALID_CREDENTIALS:
+			default:
+				return "CustomerErrorLogin";
+			}
 		}
-		return "CustomerErrorLogin";
 
 	}
 

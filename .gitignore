@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Local Maven repository used by sandboxed verification
+.m2/
