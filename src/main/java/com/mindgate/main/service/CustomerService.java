@@ -4,10 +4,11 @@ import java.util.List;
 
 import com.mindgate.main.domain.Customer;
 import com.mindgate.main.domain.File;
+import com.mindgate.main.domain.CustomerLoginResult;
 
 public interface CustomerService {
 
-    Customer loginCustomer(Customer customer);
+    CustomerLoginResult loginCustomer(Customer customer);
 	Customer addCustomer(Customer customer, File file);
 	Boolean approveCustomer(int customerId);
 	List<Customer> getAllCustomer();

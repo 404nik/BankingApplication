@@ -31,7 +31,15 @@ This project follows Oracle coding standards and best practices, with a final de
   Transfer funds between iNB user accounts.
 
 - **Security**:  
-  Accounts are locked after three consecutive invalid login attempts and can only be reactivated manually.
+  Customer logins are temporarily locked for 15 minutes after five consecutive invalid password attempts. This temporary lockout is stored separately from administrative account status, so bank staff can still block or approve customer accounts independently and administrative blocks do not expire automatically.
+
+---
+
+## Customer Login Lockout
+
+Customer authentication allows four consecutive invalid password attempts. On the fifth consecutive failure, the account enters a temporary password lockout for 15 minutes. During that window, both correct and incorrect passwords render the existing blocked page and no session is created. When the deadline expires, the next login attempt is evaluated normally; a successful password resets the failure count and clears the deadline, while a wrong password starts a fresh failure sequence.
+
+Temporary lockout uses `customer_login_count` and `customer_login_locked_until`. The permanent `customer_account_status` values remain separate: `UNAPPROVED` customers still see the not-approved page, and administratively `BLOCKED` customers remain blocked until staff unblock them. Apply `src/main/resources/sql/add_customer_login_lockout.sql` to each Oracle schema before deploying code that reads the lockout deadline column.
 
 ---
 

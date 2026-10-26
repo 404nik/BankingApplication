@@ -1,5 +1,6 @@
 package com.mindgate.main.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.mindgate.main.domain.Customer;
@@ -9,7 +10,8 @@ import com.mindgate.main.domain.Customer;
 
 public interface CustomerRepository {
 
-	Customer loginCustomer(Customer customer);
+	Customer findByIdForLogin(int customerId);
+	Boolean updateLoginState(int customerId, int loginCount, LocalDateTime lockedUntil);
 	Customer addCustomer(Customer customer);
 	Boolean approveCustomer(int customerId);
 	List<Customer> getAllCustomer();
